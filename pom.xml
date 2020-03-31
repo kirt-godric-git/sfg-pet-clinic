@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>guru.springframework</groupId>
 	<artifactId>sfg-pet-clinic</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>sfg-pet-clinic</name>
 	<description>SFG Pet Clinic Project</description>
 
@@ -25,13 +24,15 @@
 		<!-- But not working 'mvn install' for pet-clinic-data coz of 'repackage': Unable to find main class -->
     	<version>2.1.0.RELEASE</version>	
 		<!--<version>2.0.3.RELEASE</version>-->
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>		
 	</properties>
 
 	<dependencies>
@@ -46,13 +47,23 @@
 			</plugin>
 
 			<!-- This configures Maven Release Plugin  -->
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
+				<!-- <version>2.5.1</version> -->
+				<!-- <version>3.0.4</version> -->
+				
 				<configuration>
-					<goals>install</goals>
+					<!-- to avoid by default, deploy site-deploy -->
+					<goals>install</goals> 
+					
+					<!-- to auto version -->
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
-			</plugin> -->			               	
+			</plugin>			               	
 		</plugins>
 	</build>
 
@@ -61,6 +72,16 @@
         <developerConnection>scm:git:git@github.com:springframeworkguru/sfg-pet-clinic.git</developerConnection>
       <tag>HEAD</tag>
   	</scm> -->
-  
+    <scm>
+      <developerConnection>scm:git:git@github.com:kirt-godric-git/sfg-pet-clinic.git</developerConnection>
+          
+      <!-- <connection>scm:git:ssh://git@github.com/kirt-godric-git/sfg-pet-clinic.git</connection>
+      <developerConnection>scm:git:ssh://git@github.com/kirt-godric-git/sfg-pet-clinic.git</developerConnection> -->
+      	
+      <!-- <connection>scm:git:https://kirt-godric-git:$GitTr1kTest@1234@github.com:kirt-godric-git/sfg-pet-clinic.git</connection> -->
+      <!-- <connection>scm:git:ssh://git@github.com:kirt-godric-git/sfg-pet-clinic.git</connection> -->
+      <!-- <developerConnection>scm:git:git@github.com:kirt-godric-git/sfg-pet-clinic.git</developerConnection> -->         
+      <tag>sfg-pet-clinic-0.0.1</tag>
+  	</scm> 
 
 </project>
