@@ -1,5 +1,6 @@
 package guru.springframework.sfgpetclinic.services.map;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.context.annotation.Profile;
@@ -79,8 +80,13 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
 
 	@Override
 	public Owner findByLastName(String lastName) {
-		// TODO Auto-generated method stub
-		return null;
+		return super.findAll()	// <-- will return Set<T>
+				.stream()		// <-- Java 8, Returns a sequential with this collection as its source.
+				// Below, returns a stream consisting of the elements of this stream that match the given predicate.	
+				.filter(owner -> owner.getLastName().equalsIgnoreCase(lastName))
+				.findFirst()	// <-- Returns an {@link Optional} describing the first element of this stream, 
+								// or an empty {@code Optional} if the stream is empty. 
+				.orElse(null);	// <-- Return the value if present, otherwise return {@code other}.
 	}
 	
 }
