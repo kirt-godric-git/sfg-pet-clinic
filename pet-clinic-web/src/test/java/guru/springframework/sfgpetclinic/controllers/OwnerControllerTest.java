@@ -19,11 +19,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.isNotNull;
 
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasProperty;
 
 @ExtendWith(MockitoExtension.class)
 class OwnerControllerTest {
@@ -80,5 +84,16 @@ class OwnerControllerTest {
 		
 		verifyZeroInteractions(ownerService);
 	}
+	
+	@Test
+	void displayOwner() throws Exception {
+		when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1L).build());
+		
+		mockMvc.perform(get("/owners/123"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/ownerDetails"))
+			//.andExpect(model().attribute("owner", isNotNull())); 	// <-- not working
+			.andExpect(model().attribute("owner", hasProperty("id", is(1L)))); 
+	}		
 
 }
