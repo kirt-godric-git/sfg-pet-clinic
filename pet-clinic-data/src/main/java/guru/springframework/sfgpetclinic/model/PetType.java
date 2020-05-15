@@ -24,6 +24,11 @@ public class PetType extends BaseEntity {
 	@Column(name = "name")
 	private String name;
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 	// *** Removed below all setters/getters because of using Lombok to remove boiler plate codes...****
 	/*public String getName() {
 		return name;
