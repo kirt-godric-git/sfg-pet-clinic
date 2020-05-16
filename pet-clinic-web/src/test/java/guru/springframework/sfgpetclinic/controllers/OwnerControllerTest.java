@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNotNull;
 
 import guru.springframework.sfgpetclinic.model.Owner;
@@ -52,6 +54,7 @@ class OwnerControllerTest {
 				.build();
 	}
 
+	/* Removed because listOwners() was removed as well. 
 	@Test
 	void testListOwners() throws Exception {
 		when(ownerService.findAll()).thenReturn(owners);
@@ -60,12 +63,13 @@ class OwnerControllerTest {
 			//.andExpect(status().is(200));	// alternative to isOk()
 			.andExpect(status().isOk());
 		
-		mockMvc.perform(get("/owners"))
+		mockMvc.perform(get("/owners/"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("owners/index"))
 			.andExpect(model().attribute("owners", hasSize(2))); // will fail if not size of 2
-	}
+	}*/
 
+	/* Removed because listOwners() was removed as well. 
 	@Test
 	void testListOwnersByIndex() throws Exception {
 		when(ownerService.findAll()).thenReturn(owners);
@@ -74,16 +78,46 @@ class OwnerControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("owners/index"))
 			.andExpect(model().attribute("owners", hasSize(2))); // will fail if not size of 2
-	}	
+	}*/	
 	
 	@Test
 	void testFindOwners() throws Exception {
 		mockMvc.perform(get("/owners/find"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("notimplemented"));
+			.andExpect(view().name("owners/findOwners"));
 		
 		verifyZeroInteractions(ownerService);
 	}
+	
+	@Test
+	void findOwners() throws Exception {
+		mockMvc.perform(get("/owners/find"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/findOwners"))
+			.andExpect(model().attributeExists("owner")); 
+		
+		verifyZeroInteractions(ownerService);
+	}	
+	
+	@Test
+	void processFindFormReturnMany() throws Exception {
+		when(ownerService.findAllByLastNameLike(anyString()))
+			.thenReturn(Arrays.asList(Owner.builder().id(1L).build(), Owner.builder().id(2L).build()));
+		
+		mockMvc.perform(get("/owners"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/ownersList"))
+			.andExpect(model().attribute("selections", hasSize(2))); 
+	}		
+	
+	@Test
+	void processFindFormReturnOne() throws Exception {
+		when(ownerService.findAllByLastNameLike(anyString())).thenReturn(Arrays.asList(Owner.builder().id(1L).build()));
+		
+		mockMvc.perform(get("/owners"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/1")); 
+	}	
 	
 	@Test
 	void displayOwner() throws Exception {
@@ -95,5 +129,4 @@ class OwnerControllerTest {
 			//.andExpect(model().attribute("owner", isNotNull())); 	// <-- not working
 			.andExpect(model().attribute("owner", hasProperty("id", is(1L)))); 
 	}		
-
 }

@@ -1,5 +1,6 @@
 package guru.springframework.sfgpetclinic.services.map;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -87,6 +88,12 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
 				.findFirst()	// <-- Returns an {@link Optional} describing the first element of this stream, 
 								// or an empty {@code Optional} if the stream is empty. 
 				.orElse(null);	// <-- Return the value if present, otherwise return {@code other}.
+	}
+
+	@Override
+	public List<Owner> findAllByLastNameLike(String lastName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
