@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -36,8 +37,17 @@ public class OwnerController {
 		this.visitService = visitService;
 	}
 
+	/* KNOTES:
+	 * @InitBinder --> Annotation that identifies methods which initialize the WebDataBinder which
+	 * will be used for populating command and form object arguments of annotated handler methods.
+	 * Init-binder methods must not have a return value; they are usually declared as void.
+	 * WebDataBinder --> Special DataBinder for data binding from web request parameters to JavaBean 
+	 * objects. Designed for web environments, but not dependent on the Servlet API; serves as base 
+	 * class for more specific DataBinder variants, such as org.springframework.web.bind.ServletRequestDataBinder.
+	 */
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
+		System.out.println("OwnerController.setAllowedFields() method called...");
 		dataBinder.setDisallowedFields("id");
 	}
 	
@@ -57,6 +67,7 @@ public class OwnerController {
 	
 	@GetMapping
 	public String processFindForm(Owner owner, BindingResult result, Model model) {
+		System.out.println("OwnerController.processFindForm() method called...");
 		// allow parameterless GET request for /owners to return all records
 		if (owner.getLastName() == null) {
 			owner.setLastName(""); // empty string signifies broadest possible search
@@ -66,16 +77,19 @@ public class OwnerController {
 		List<Owner> results = ownerService.findAllByLastNameLike("%" + owner.getLastName() + "%");
 		
 		if (results.isEmpty()) {
+			System.out.println("No owners found! Will go to 'owners/findOwners' path...");
 			// no owners found
 			result.rejectValue("lastName", "notFound", "not found");
 			return "owners/findOwners";
 		}
 		else if (results.size() == 1) {
+			System.out.println("One owner found! Will redirect to 'owners/{ownerId}' path...");
 			// 1 owner found
 			owner = results.get(0);
 			return "redirect:/owners/" + owner.getId();
 		}
 		else {
+			System.out.println("Multiple owners found! Will go to 'owners/ownersList' path...");
 			// multiple owners found
 			model.addAttribute("selections", results);
 			return "owners/ownersList";
@@ -89,6 +103,12 @@ public class OwnerController {
 	 */
 	@GetMapping("/{ownerId}")
 	public ModelAndView showOwner(@PathVariable("ownerId") Long ownerId) {
+		System.out.println("OwnerController.showOwner() method called...");
+		
+		/*
+		 * ModelAndView --> Convenient constructor when there is no model data to expose.
+		 * Can also be used in conjunction with {@code addObject}.
+		 */
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		Owner owner = ownerService.findById(ownerId);
 		// TODO: Copied originally but temporarily commented for implementation is not yet there
@@ -96,6 +116,9 @@ public class OwnerController {
 		/*for (Pet pet : owner.getPets()) {
 			pet.setVisitsInternal(visitService.findByPetId(pet.getId()));
 		}*/
+		
+		// ModelAndView.addObject --> Add an attribute to the model using parameter name generation.
+		// Therefore owner here passed will be used as attribute name 'owner' in th:object="${owner}"...
 		mav.addObject(owner);
 		return mav;
 	}
