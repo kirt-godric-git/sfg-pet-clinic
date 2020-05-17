@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 @Table(name = "pets")
 public class Pet extends BaseEntity {
 	@Column(name = "name")
@@ -42,6 +42,16 @@ public class Pet extends BaseEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
 	private Set<Visit> visits = new HashSet<Visit>();
+
+	@Builder
+	public Pet(Long id, String name, PetType petType, Owner owner, LocalDate birthDate, Set<Visit> visits) {
+		super(id);
+		this.name = name;
+		this.petType = petType;
+		this.owner = owner;
+		this.birthDate = birthDate;
+		this.visits = visits;
+	}
 	
 	// *** Removed below all setters/getters because of using Lombok to remove boiler plate codes...****
 	/*public String getName() {

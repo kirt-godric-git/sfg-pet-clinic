@@ -133,13 +133,12 @@ class OwnerControllerTest {
 			.andExpect(model().attribute("owner", hasProperty("id", is(1L)))); 
 	}	
 	
-	
-	@Test
 	/**
 	 * A processor that has an initializer which for a new situation is 
-	 * just going to return back an empty owner object.
+	 * just going to return back an empty Owner object.
 	 * @throws Exception
 	 */
+	@Test
 	void initCreationForm() throws Exception {
 		mockMvc.perform(get("/owners/new"))
 			.andExpect(status().isOk())
@@ -149,6 +148,10 @@ class OwnerControllerTest {
 		verifyZeroInteractions(ownerService);
 	}
 	
+	/**
+	 * This test method handles the created new Owner object. 
+	 * @throws Exception
+	 */
 	@Test
 	void processCreationForm() throws Exception {
 		when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1L).build());
@@ -161,12 +164,12 @@ class OwnerControllerTest {
 		verify(ownerService).save(ArgumentMatchers.any());
 	}	
 	
-	@Test
 	/**
 	 * A processor that has an initializer which for a new situation is 
-	 * just going to return back a populated owner object that's been requested.
+	 * just going to return back a populated Owner object that's been requested.
 	 * @throws Exception
 	 */
+	@Test
 	void initUpdateOwnerForm() throws Exception {
 		when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1L).build());
 		
