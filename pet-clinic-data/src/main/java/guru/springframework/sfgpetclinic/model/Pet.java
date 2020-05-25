@@ -50,7 +50,19 @@ public class Pet extends BaseEntity {
 		this.petType = petType;
 		this.owner = owner;
 		this.birthDate = birthDate;
-		this.visits = visits;
+		
+		if (visits != null) {
+			this.visits = visits;
+		}
+	}
+	
+	public void addVisit(Visit visit) 
+	{	
+		if (this.visits == null) {
+			this.visits = new HashSet<>();
+		}
+		this.visits.add(visit);
+		visit.setPet(this);
 	}
 	
 	// *** Removed below all setters/getters because of using Lombok to remove boiler plate codes...****
